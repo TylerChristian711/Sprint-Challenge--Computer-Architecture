@@ -7,6 +7,12 @@ PRN = 0b01000111
 HLT = 0b00000001
 NOP = 0b00000000
 MUL = 0b10100010
+POP = 0b01000110
+PUSH = 0b01000101
+RET = 0b00010001
+ADD = 0b10100000
+SP = 0b00000111
+
 
 
 class CPU:
@@ -82,6 +88,25 @@ class CPU:
         reg_num2 = self.ram_read(self.pc + 2)
         self.alu("MUL", reg_num1, reg_num2)
         self.pc += 3
+
+
+    def POP(self):
+        add_to_topStack = self.reg[SP]
+        value = self.ram[add_to_topStack]
+        reg_num = self.ram[self.pc + 1]
+        self.reg[reg_num] = value
+        self.reg[SP] += 1
+        self.pc += 2
+
+    def PUSH(self):
+        reg_num = self.ram[self.pc + 1]
+        value = self.reg[reg_num]
+        self.reg[SP] -= 1
+        top_of_stack_add = self.reg[SP]
+        self.ram[top_of_stack_add] = value
+        self.pc += 2
+
+
 
     def NOP(self):
         self.pc += 1
