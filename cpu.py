@@ -12,6 +12,13 @@ PUSH = 0b01000101
 RET = 0b00010001
 ADD = 0b10100000
 SP = 0b00000111
+CMB = 0b10100111
+JMP = 0b01010100
+JNE = 0b01010110
+JEQ = 0b01010101
+CALL = 0b01010000
+
+
 
 
 class CPU:
@@ -21,6 +28,7 @@ class CPU:
         """Construct a new CPU."""
         self.ram = [0] * 256
         self.reg = [0] * 8
+        self.flag_reg = [0] * 8
         self.pc = 0
         self.running = True
 
@@ -129,6 +137,8 @@ class CPU:
             HLT: self.HLT,
             MUL: self.MUL,
             PRN: self.PRN,
+            POP: self.POP,
+            CALL: self.CALL,
             LDI: self.LDI
         }
 
