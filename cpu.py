@@ -9,8 +9,9 @@ NOP = 0b00000000
 MUL = 0b10100010
 POP = 0b01000110
 PUSH = 0b01000101
-
-
+RET = 0b00010001
+ADD = 0b10100000
+SP = 0b00000111
 
 
 class CPU:
@@ -87,7 +88,6 @@ class CPU:
         self.alu("MUL", reg_num1, reg_num2)
         self.pc += 3
 
-
     def POP(self):
         add_to_topStack = self.reg[SP]
         value = self.ram[add_to_topStack]
@@ -104,10 +104,24 @@ class CPU:
         self.ram[top_of_stack_add] = value
         self.pc += 2
 
-
+    def RET(self):
+        subroutine_addr = self.ram[self.reg[SP]]
+        self.reg[SP] += 1
+        self.pc = subroutine_addr
 
     def NOP(self):
         self.pc += 1
+
+    def CALL(self):
+        return_addr = self.pc + 2
+
+        self.reg[SP] -= 1
+        self.ram[self.reg[SP]] = return_addr
+
+        reg_num = self.ram[self.pc + 1]
+        subroutine_addr = self.reg[reg_num]
+
+        self.pc = subroutine_addr
 
     def call_fun(self, n):
         branch_table = {
